@@ -1,0 +1,586 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Último Turno</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=Public+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: hoja de storyboard. Cabecera con ficha del corto, leyenda de colores y seis tarjetas (marco 16:9 arriba, ficha técnica debajo). */
+:root {
+  --bg: #eceff2;
+  --fg: #1a2230;
+  --muted: #566274;
+  --card: #f8f9fa;
+  --line: #cfd5dd;
+  --accent: var(--fg);
+  --paper: #fafaf7;
+  --ink: #1b1e25;
+  --pencil: #7b828c;
+  --red: var(--ink);
+  --beam: var(--paper);
+  --f-display: 'Bebas Neue', 'Arial Narrow', Impact, sans-serif;
+  --f-body: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151b;
+    --fg: #e7eaef;
+    --muted: #9ba5b3;
+    --card: #19202a;
+    --line: #2b3441;
+    --accent: var(--fg);
+    --paper: #ecece6;
+    --pencil: #767d87;
+    --beam: var(--paper);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151b;
+  --fg: #e7eaef;
+  --muted: #9ba5b3;
+  --card: #19202a;
+  --line: #2b3441;
+  --accent: var(--fg);
+  --paper: #ecece6;
+  --pencil: #767d87;
+  --beam: var(--paper);
+  color-scheme: dark;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 4vw, 32px);
+  padding-block: 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 28px 48px;
+  align-items: end;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--fg);
+}
+.eyebrow {
+  margin: 0 0 6px;
+  font: 600 12px/1.3 var(--f-mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+h1 {
+  margin: 0;
+  font: 400 clamp(56px, 11vw, 104px)/.88 var(--f-display);
+  letter-spacing: .015em;
+  text-wrap: balance;
+}
+.sub {
+  margin: 14px 0 0;
+  max-width: 46ch;
+  color: var(--muted);
+}
+.ficha {
+  margin: 0;
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+.ficha > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+  padding-block: 8px;
+  border-top: 1px solid var(--line);
+}
+.ficha > div:first-child { border-top: 0; }
+dt {
+  font: 600 11px/1.5 var(--f-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+dd { margin: 0; min-width: 0; }
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font: 400 12px/1.4 var(--f-mono);
+  color: var(--muted);
+}
+.legend li { display: flex; align-items: center; gap: 8px; }
+.sw { width: 28px; height: 14px; border: 1.5px solid var(--fg); flex: none; }
+.sw.red { background: var(--red); border-color: var(--red); height: 4px; border-width: 0; }
+.sw.sombra { background: repeating-linear-gradient(55deg, var(--pencil) 0 2px, var(--paper) 2px 7px); }
+.sw.luz { background: var(--beam); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+  gap: 22px;
+}
+.card {
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+  margin-bottom: 10px;
+}
+.no {
+  font: 400 40px/1 var(--f-display);
+  letter-spacing: .03em;
+}
+.no b { color: var(--accent); font-weight: 400; }
+.tipo {
+  font: 600 12px/1.4 var(--f-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.slug {
+  flex-basis: 100%;
+  font: 400 12px/1.4 var(--f-mono);
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  background: var(--paper);
+  border: 2px solid var(--fg);
+}
+.frame svg { display: block; width: 100%; height: 100%; }
+.pov {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  padding: 2px 7px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 11px/1.5 var(--f-mono);
+  letter-spacing: .1em;
+}
+.fields {
+  margin: 16px 0 0;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 12px 14px;
+}
+.fields dd { font-size: 14px; }
+.fields dd q { font-weight: 600; quotes: "«" "»"; }
+.fields dt { padding-top: 3px; }
+
+/* dibujo */
+.bgp { fill: var(--paper); }
+.l { fill: none; stroke: var(--ink); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.lf { fill: var(--paper); }
+.lb { fill: var(--beam); }
+.t { stroke-width: 2; }
+.k { fill: url(#hatch); stroke: none; }
+.kd { fill: url(#hatchd); stroke: none; }
+.b { fill: var(--beam); stroke: none; opacity: .85; }
+.ink { fill: var(--ink); stroke: none; }
+.r { fill: none; stroke: var(--red); stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
+.rf { fill: var(--paper); }
+.sk { fill: var(--paper); }
+.go { fill: var(--paper); }
+.dr { fill: var(--paper); }
+.bx { fill: var(--paper); }
+.ct { fill: var(--paper); }
+.sc { fill: var(--paper); }
+.mt { fill: var(--paper); }
+.bf { fill: var(--paper); }
+.yl { fill: var(--paper); }
+.pk { fill: var(--paper); }
+.rt {
+  font-family: Calibri, Carlito, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  fill: var(--red);
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+.tk { font-family: Calibri, Carlito, Arial, sans-serif; font-weight: 400; font-size: 16px; fill: var(--ink); }
+.so { fill: none; stroke: var(--ink); stroke-width: 24; stroke-linecap: round; }
+.si { fill: none; stroke: var(--paper); stroke-width: 17; stroke-linecap: round; }
+.si.sk { stroke: var(--paper); }
+.si.bl { stroke: var(--paper); }
+
+@media (max-width: 820px) {
+  .top { grid-template-columns: minmax(0, 1fr); align-items: start; }
+}
+@media (max-width: 520px) {
+  .fields { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .fields dt { padding-top: 0; }
+  .fields dd { margin-bottom: 12px; }
+  .ficha > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <filter id="wobble" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wobbleT" x="-5%" y="-25%" width="110%" height="150%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+      <line x1="0" y1="0" x2="0" y2="10" style="stroke:var(--pencil)" stroke-width="2.4"/>
+    </pattern>
+    <pattern id="hatchd" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <line x1="0" y1="0" x2="0" y2="6" style="stroke:var(--pencil)" stroke-width="2.6"/>
+    </pattern>
+    <g id="hand">
+      <path class="l lf sk" d="M225 215 L372 362 L300 362 L190 262 Z"/>
+      <path class="so" d="M170 220 L126 190 M172 228 L120 214 M176 236 L126 240 M180 244 L138 266 M196 212 L186 178"/>
+      <path class="si sk" d="M170 220 L126 190 M172 228 L120 214 M176 236 L126 240 M180 244 L138 266 M196 212 L186 178"/>
+      <ellipse class="l lf sk" cx="196" cy="234" rx="38" ry="32" transform="rotate(-24 196 234)"/>
+    </g>
+  </defs>
+</svg>
+
+<main class="page">
+  <header class="top">
+    <div>
+      <h1>Último Turno</h1>
+      <p class="sub">Cortometraje de suspenso en plano subjetivo.</p>
+    </div>
+    <dl class="ficha">
+      <div><dt>Personaje</dt><dd>Leo, 20 años, empleado de mantenimiento</dd></div>
+      <div><dt>Objetos</dt><dd>Una linterna y un manojo de llaves</dd></div>
+      <div><dt>Conflicto</dt><dd>Una puerta trancada del almacén se golpea con fuerza desde dentro</dd></div>
+      <div><dt>Resolución</dt><dd>Leo abre con miedo y descubre a un gatito atrapado</dd></div>
+    </dl>
+  </header>
+
+  <ul class="legend" aria-label="Leyenda de los dibujos">
+    <li><span class="sw red"></span>Trazos sueltos y texto: movimiento y sonido</li>
+    <li><span class="sw sombra"></span>Rayado: zona en sombra</li>
+    <li><span class="sw luz"></span>Blanco sobre rayado: luz de la linterna</li>
+  </ul>
+
+  <div class="grid">
+
+    <!-- PLANO 1 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>1</b></span>
+        <span class="tipo">Plano Subjetivo General</span>
+        <span class="slug">INT. PASILLO DE OFICINAS · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">1/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de un pasillo con una mano que sostiene llaves junto a un interruptor">
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <path class="k" d="M6 10 L268 132 L262 236 L8 350 Z"/>
+            <path class="k" d="M634 6 L396 124 L398 244 L632 352 Z"/>
+            <path class="b" d="M268 132 L262 236 L398 244 L396 124 Z"/>
+            <path class="l" d="M6 10 L268 132 L396 124 L634 6"/>
+            <path class="l" d="M8 350 L262 236 L398 244 L632 352"/>
+            <path class="l" d="M268 132 L262 236 L398 244 L396 124 Z"/>
+            <path class="l lf dr" d="M306 160 L352 158 L354 238 L308 236 Z"/>
+            <circle class="l" cx="344" cy="200" r="3"/>
+            <path class="l" d="M205 32 L435 28 L420 58 L222 62 Z"/>
+            <path class="l lb" d="M295 92 L365 90 L360 104 L298 106 Z"/>
+            <path class="l t" d="M330 84 L330 74 M300 86 L292 78 M360 84 L368 76"/>
+            <g transform="rotate(-6 110 170)">
+              <rect class="l lf" x="98" y="152" width="24" height="38"/>
+              <path class="l" d="M110 160 L110 172"/>
+            </g>
+            <use href="#hand"/>
+            <circle class="l" cx="148" cy="302" r="16"/>
+            <circle class="l lf go" cx="132" cy="330" r="8"/>
+            <circle class="l lf go" cx="150" cy="338" r="8"/>
+            <circle class="l lf go" cx="168" cy="330" r="8"/>
+            <path class="l" d="M130 338 L118 358 M150 346 L150 362 M169 338 L182 358 M118 358 L110 356 M150 358 L158 358"/>
+            <path class="r" d="M128 148 C 150 92, 190 74, 214 66 M214 66 L197 66 M214 66 L206 82"/>
+            <path class="r" d="M500 90 C 505 70, 470 56, 442 50 M442 50 L457 46 M442 50 L453 63"/>
+          </g>
+          <text class="rt" x="34" y="132">¡clic!</text>
+          <text class="rt" x="462" y="120">se apagan</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>Pasillo largo de oficinas a la altura de los ojos de Leo, con la perspectiva hacia una puerta al fondo. Las luces del techo cercanas ya están apagadas y las paredes laterales caen en penumbra. Desde abajo a la derecha entra la mano de Leo, con un manojo de llaves colgando de un dedo, y toca un interruptor en la pared izquierda.</dd>
+        <dt>Acción</dt>
+        <dd>Leo avanza por el pasillo y baja el interruptor. Las luces se apagan por tramos delante de él.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Clic seco del interruptor, zumbido eléctrico que se corta, tintineo de llaves y pasos lentos. Sin diálogo.</dd>
+      </dl>
+    </article>
+
+    <!-- PLANO 2 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>2</b></span>
+        <span class="tipo">Plano Subjetivo General · fijo</span>
+        <span class="slug">INT. PASILLO DE OFICINAS · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">2/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de un pasillo oscuro con una puerta lejana que vibra">
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <path class="kd" d="M0 0 L270 140 L270 220 L0 360 Z"/>
+            <path class="kd" d="M640 0 L370 140 L370 220 L640 360 Z"/>
+            <path class="kd" d="M0 0 L640 0 L370 140 L270 140 Z"/>
+            <path class="k" d="M0 360 L640 360 L370 220 L270 220 Z"/>
+            <path class="l" d="M0 0 L270 140 M640 0 L370 140 M0 360 L270 220 M640 360 L370 220"/>
+            <path class="l lf" d="M270 140 L370 140 L370 220 L270 220 Z"/>
+            <path class="l lf dr" d="M304 160 L340 157 L342 220 L303 220 Z"/>
+            <circle class="l" cx="334" cy="192" r="2.5"/>
+            <path class="r" d="M290 166 L276 160 M290 190 L272 190 M290 214 L276 222 M356 166 L370 160 M356 190 L374 190 M356 214 L370 222"/>
+            <polygon class="r yl" points="520,90 486,116 472,157 436,132 393,131 406,90 393,49 436,48 472,23 486,64"/>
+            <path class="r" d="M388 138 L350 166 M350 166 L363 164 M350 166 L357 154"/>
+          </g>
+          <text class="rt" x="410" y="102" font-size="32" transform="rotate(-6 450 90)">¡PUM!</text>
+          <text class="rt" x="20" y="344" style="font-size:22px">Leo se detiene: plano fijo</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>El mismo pasillo, ahora casi a oscuras. Al fondo, pequeña y lo único nítido, la puerta del almacén. Paredes, techo y suelo se pierden en sombra hacia los bordes del encuadre.</dd>
+        <dt>Acción</dt>
+        <dd>Un golpe seco retumba al fondo. Leo se detiene: la cámara deja de avanzar y queda fija, con un leve temblor.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Silencio de edificio vacío con un ruido ambiente muy bajo. Golpe seco con reverberación (¡PUM!). La respiración de Leo sube de volumen.</dd>
+      </dl>
+    </article>
+
+    <!-- PLANO 3 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>3</b></span>
+        <span class="tipo">Plano Subjetivo Medio</span>
+        <span class="slug">INT. RECEPCIÓN DE OFICINAS · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">3/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de cuatro monitores de seguridad, uno con rayas, sobre un mostrador con una linterna y una mano">
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <rect class="l lf sc" x="110" y="24" width="170" height="100"/>
+            <path class="l t" d="M124 38 L168 62 L168 90 L124 110 M266 38 L222 62 L222 90 L266 110 M168 62 L222 62 L222 90 L168 90"/>
+            <rect class="l lf sc" x="300" y="24" width="170" height="100"/>
+            <path class="l t" d="M322 108 L450 108 M342 108 L342 70 L424 70 L424 108 M376 70 L376 52"/>
+            <rect class="l lf sc" x="110" y="140" width="170" height="100"/>
+            <path class="l t" d="M172 224 L172 168 L222 168 L222 224 M124 226 L266 226 M212 198 L214 198"/>
+            <rect class="k" x="300" y="140" width="170" height="100"/>
+            <rect class="l" x="300" y="140" width="170" height="100"/>
+            <path class="l t" d="M312 152 L340 198 L360 156 L384 228 L406 160 L432 226 L452 166 L460 230 M312 216 L336 172 L362 234 L390 174 L416 228"/>
+            <rect class="r" x="292" y="132" width="186" height="116" rx="8"/>
+            <path class="l lf dr" d="M20 262 L620 262 L640 300 L0 300 Z"/>
+            <path class="l lf bx" d="M0 300 L640 300 L640 362 L0 362 Z"/>
+            <rect class="l lf bf" x="82" y="272" width="104" height="22" rx="7" transform="rotate(-3 134 283)"/>
+            <path class="l lf go" d="M82 271 L60 262 L58 304 L82 295 Z"/>
+            <path class="l t" d="M120 272 L120 294 M150 272 L150 293"/>
+            <use href="#hand" transform="translate(12 48)"/>
+          </g>
+          <text class="rt" x="30" y="252" style="font-size:22px">linterna</text>
+          <text class="rt" x="486" y="166" style="font-size:22px">cámara del</text>
+          <text class="rt" x="486" y="192" style="font-size:22px">almacén</text>
+          <text class="rt" x="486" y="218" style="font-size:22px">(rayas)</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>Mostrador de recepción con cuatro monitores de seguridad en la pared. Tres muestran pasillos vacíos, el de la cámara del almacén está lleno de rayas e interferencias. Sobre el mostrador hay una linterna y la mano de Leo se acerca a cogerla.</dd>
+        <dt>Acción</dt>
+        <dd>Leo mira las pantallas, ve la interferencia y agarra la linterna.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Zumbido estático de los monitores. LEO (susurrando): <q>Será el viento...</q> Clic de la linterna al encenderse.</dd>
+      </dl>
+    </article>
+
+    <!-- PLANO 4 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>4</b></span>
+        <span class="tipo">Plano Subjetivo General · con linterna</span>
+        <span class="slug">INT. PASILLO DE ALMACÉN · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">4/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de una puerta que vibra iluminada por el haz de una linterna">
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <path class="kd" d="M0 0 L250 60 L250 300 L0 360 Z"/>
+            <path class="kd" d="M640 0 L390 60 L390 300 L640 360 Z"/>
+            <path class="kd" d="M0 0 L640 0 L390 60 L250 60 Z"/>
+            <path class="k" d="M0 360 L640 360 L390 300 L250 300 Z"/>
+            <path class="l" d="M0 0 L250 60 M640 0 L390 60 M0 360 L250 300 M640 360 L390 300"/>
+            <path class="b" d="M474 338 L236 52 L408 48 Z"/>
+            <path class="l t" stroke-dasharray="8 8" d="M474 338 L236 52 M474 338 L410 48"/>
+            <path class="l dr" d="M250 60 L390 60 L390 300 L250 300 Z"/>
+            <path class="l t" d="M285 62 L284 298 M320 62 L321 298 M355 60 L356 300"/>
+            <circle class="l" cx="372" cy="190" r="5"/>
+            <g transform="rotate(-3 320 109)">
+              <rect class="l lf" x="274" y="96" width="92" height="28"/>
+            </g>
+            <path class="r" stroke-dasharray="6 7" d="M258 54 L398 66 L394 308 L254 296 Z"/>
+            <path class="r" d="M236 110 L218 118 L236 130 L216 140 L236 152 M404 110 L424 118 L404 130 L426 140 L404 152"/>
+            <path class="so" d="M470 338 L560 366"/>
+            <path class="si bl" d="M470 338 L560 366"/>
+            <path class="l lb" d="M452 322 L486 316 L490 350 L458 358 Z"/>
+            <ellipse class="l lf sk" cx="560" cy="356" rx="42" ry="30"/>
+            <path class="l t" d="M536 346 L532 368 M550 340 L546 368 M566 338 L562 366"/>
+          </g>
+          <text class="tk" x="320" y="116" text-anchor="middle" transform="rotate(-3 320 109)">ALMACÉN</text>
+          <text class="rt" x="22" y="64" style="font-size:34px" transform="rotate(-6 100 56)">¡PUM! ¡PUM!</text>
+          <text class="rt" x="22" y="338" style="font-size:22px">Leo retrocede: la cámara tiembla</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>Pasillo estrecho y oscuro. La linterna, sostenida por la mano de Leo abajo a la derecha, ilumina la puerta de madera con el cartel "ALMACÉN". La puerta vibra, se ven líneas de movimiento en los bordes y el marco se duplica por el temblor.</dd>
+        <dt>Acción</dt>
+        <dd>La madera se sacude con violencia desde dentro. Leo retrocede, la cámara se aleja hacia atrás con un temblor y la luz se mueve.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Golpes cada vez más fuertes y seguidos (PUM, PUM, PUM). LEO: ¡Hay alguien ahí! ¡Está cerrado! Nadie responde. Música de tensión con pulso.</dd>
+      </dl>
+    </article>
+
+    <!-- PLANO 5 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>5</b></span>
+        <span class="tipo">Plano Subjetivo Detalle</span>
+        <span class="slug">INT. FRENTE A LA PUERTA DEL ALMACÉN · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">5/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de una mano metiendo una llave en la cerradura de una puerta de madera">
+          <defs><clipPath id="c5"><ellipse cx="320" cy="180" rx="270" ry="190"/></clipPath></defs>
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <rect class="k" width="640" height="360"/>
+            <ellipse class="bgp" cx="320" cy="180" rx="270" ry="190"/>
+            <ellipse class="b" cx="320" cy="180" rx="270" ry="190"/>
+            <g clip-path="url(#c5)">
+              <path class="l t" d="M120 0 L118 360 M236 0 L238 360 M404 0 L406 360"/>
+              <ellipse class="l t" cx="180" cy="80" rx="12" ry="20"/>
+              <ellipse class="l t" cx="440" cy="300" rx="14" ry="22"/>
+              <rect class="ink" x="470" y="0" width="16" height="360"/>
+              <rect class="l lf mt" x="262" y="88" width="120" height="190" rx="14"/>
+              <circle class="ink" cx="322" cy="160" r="16"/>
+              <path class="ink" d="M314 170 L330 170 L336 214 L308 214 Z"/>
+              <circle class="l lf go" cx="190" cy="166" r="24"/>
+              <path class="l lf go" d="M214 160 L306 160 L306 172 L214 172"/>
+              <path class="l lf go" d="M246 172 L246 186 L258 186 L258 172 M276 172 L276 182 L288 182 L288 172"/>
+              <path class="l" d="M100 236 L66 290 M100 236 L98 306 M100 236 L132 292"/>
+              <circle class="l lf go" cx="100" cy="236" r="12"/>
+              <circle class="l lf go" cx="66" cy="290" r="9"/>
+              <circle class="l lf go" cx="98" cy="306" r="9"/>
+              <circle class="l lf go" cx="132" cy="292" r="9"/>
+              <ellipse class="l lf sk" cx="90" cy="176" rx="62" ry="46"/>
+              <ellipse class="l lf sk" cx="142" cy="148" rx="20" ry="11"/>
+              <ellipse class="l lf sk" cx="148" cy="174" rx="20" ry="11"/>
+              <ellipse class="l lf sk" cx="142" cy="200" rx="20" ry="11"/>
+            </g>
+            <path class="r" d="M286 140 Q296 128 306 140 M286 190 Q296 204 306 190"/>
+            <path class="r" d="M498 150 L560 150 M560 150 L548 140 M560 150 L548 160"/>
+          </g>
+          <text class="rt" x="496" y="124">empuja</text>
+          <text class="rt" x="286" y="322">¡clic!</text>
+          <text class="rt" x="22" y="342" style="font-size:22px">llaves que tiemblan</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>Primerísimo plano de la cerradura. Desde la izquierda, la mano de Leo mete una llave en el ojo de la cerradura y del puño cuelgan las demás llaves. La linterna ilumina un círculo de madera y el resto cae en sombra. A la derecha, el borde de la puerta ya muestra una rendija negra.</dd>
+        <dt>Acción</dt>
+        <dd>Leo prueba llaves con torpeza, encuentra la correcta, gira y empuja la puerta.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Tintineo nervioso de llaves y respiración agitada. Los golpes se detienen justo con el clic de la cerradura. Chirrido largo de bisagras.</dd>
+      </dl>
+    </article>
+
+    <!-- PLANO 6 -->
+    <article class="card">
+      <div class="head">
+        <span class="no">Plano <b>6</b></span>
+        <span class="tipo">Plano Subjetivo General</span>
+        <span class="slug">INT. FRENTE A LA PUERTA DEL ALMACÉN · NOCHE</span>
+      </div>
+      <div class="frame">
+        <span class="pov">6/6 · POV LEO</span>
+        <svg viewBox="0 0 640 360" role="img" aria-label="Dibujo torpe de un gatito entre cajas de cartón iluminado por una linterna">
+          <defs><clipPath id="c6"><ellipse cx="330" cy="210" rx="300" ry="200"/></clipPath></defs>
+          <rect class="bgp" width="640" height="360"/>
+          <g filter="url(#wobble)">
+            <rect class="k" width="640" height="360"/>
+            <ellipse class="bgp" cx="330" cy="210" rx="300" ry="200"/>
+            <ellipse class="b" cx="330" cy="210" rx="300" ry="200"/>
+            <g clip-path="url(#c6)">
+              <path class="l t" d="M0 324 L640 324"/>
+              <path class="l lf bx" d="M500 60 L580 60 L580 120 L500 120 Z"/>
+              <path class="l lf bx" d="M40 170 L212 170 L212 322 L40 322 Z"/>
+              <path class="l lf bx" d="M40 170 L84 138 L250 138 L212 170 Z"/>
+              <path class="l lf bx" d="M212 170 L250 138 L250 290 L212 322 Z"/>
+              <path class="l t" d="M70 220 L110 260 M110 220 L70 260"/>
+              <path class="l lf bx" d="M436 150 L600 150 L600 322 L436 322 Z"/>
+              <path class="l lf bx" d="M436 150 L480 118 L640 118 L600 150 Z"/>
+              <path class="l t" d="M470 190 L560 192 M470 200 L530 202"/>
+              <path class="l" d="M396 290 C 428 270 426 236 404 232"/>
+              <ellipse class="l lf ct" cx="338" cy="282" rx="66" ry="44"/>
+              <ellipse class="l lf ct" cx="310" cy="320" rx="16" ry="9"/>
+              <ellipse class="l lf ct" cx="352" cy="322" rx="16" ry="9"/>
+              <path class="l lf ct" d="M302 190 L300 144 L332 174 Z"/>
+              <path class="l lf ct" d="M344 174 L380 140 L376 192 Z"/>
+              <circle class="l lf" cx="338" cy="214" r="42"/>
+              <circle class="l lb" cx="322" cy="212" r="12"/>
+              <circle class="l lb" cx="357" cy="208" r="15"/>
+              <circle class="ink" cx="322" cy="213" r="4"/>
+              <circle class="ink" cx="358" cy="209" r="6"/>
+              <path class="r pk" d="M336 228 L346 228 L341 236 Z"/>
+              <path class="l t" d="M341 236 Q334 246 326 240 M341 236 Q348 246 356 240"/>
+              <path class="l t" d="M304 232 L270 226 M304 238 L268 240 M306 244 L274 254 M376 232 L410 224 M376 238 L412 240 M374 244 L406 254"/>
+            </g>
+            <path class="l lb" d="M520 336 L548 332 L548 364 L520 360 Z"/>
+            <ellipse class="l lf sk" cx="580" cy="354" rx="46" ry="24"/>
+            <path class="l t" d="M556 346 L552 366 M570 342 L566 366 M586 340 L582 366"/>
+            <path class="r" d="M302 112 C 314 130, 324 148, 328 164 M328 164 L322 150 M328 164 L342 156"/>
+          </g>
+          <text class="rt" x="236" y="100" style="font-size:32px" transform="rotate(-4 280 90)">¡un gatito!</text>
+          <text class="rt" x="22" y="344" style="font-size:22px">suspiro: fuuuu...</text>
+        </svg>
+      </div>
+      <dl class="fields">
+        <dt>Qué se ve</dt>
+        <dd>Interior del almacén iluminado por la linterna, cajas de cartón apiladas y entre ellas un gatito pequeño con los ojos brillantes mirando a cámara. Abajo a la derecha asoma la mano de Leo con la linterna.</dd>
+        <dt>Acción</dt>
+        <dd>Leo suspira aliviado y sonríe. La cámara se relaja, la linterna baja un poco y deja de temblar.</dd>
+        <dt>Audio / Diálogo</dt>
+        <dd>Maullido débil. Suspiro largo de Leo. LEO: Menudo susto... La música de tensión se corta y queda un tono tranquilo.</dd>
+      </dl>
+    </article>
+
+  </div>
+</main>
+
+</body></html>
